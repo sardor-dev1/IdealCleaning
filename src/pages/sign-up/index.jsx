@@ -1,9 +1,4 @@
-import {
-  Button,
-  IconButton,
-  InputAdornment,
-  TextField,
-} from "@mui/material";
+import { Button, IconButton, InputAdornment, TextField } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { ErrorMessage, Field, Form, Formik } from "formik";
@@ -12,7 +7,7 @@ import { Notification } from "../../utils/index";
 import { auth } from "../../service/";
 import { VerifyModal } from "../../components/modal";
 import { useMask } from "@react-input/mask";
-import {signUpValidationSchema} from "../../utils/validation"
+import { signUpValidationSchema } from "../../utils/validation";
 
 const Index = () => {
   const initialValues = {
@@ -66,11 +61,15 @@ const Index = () => {
         closeModal={() => setOpen(false)}
       />
       <div className="h-screen flex-col flex items-center justify-center gap-5 p-5">
-        <h1 className="text-[35px] font-normal sm:text-[36px] md:text-[56px]">
+        <h1 className="text-[35px] font-semibold sm:text-[36px] md:text-[52px]">
           Register
         </h1>
-        <div className="max-w-[600px]">
-          <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={signUpValidationSchema}>
+        <div className="max-w-[500px]">
+          <Formik
+            initialValues={initialValues}
+            onSubmit={handleSubmit}
+            validationSchema={signUpValidationSchema}
+          >
             {({ isSubmitting }) => (
               <Form>
                 <Field
