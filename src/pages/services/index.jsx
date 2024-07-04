@@ -5,6 +5,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import Modal from "../../components/modal/services";
 import useServiceStore from "../../store/services";
 import Notification from "../../utils/notification";
+
 const index = () => {
   const { getData, data, isLoading, deleteData } = useServiceStore();
   const [modal, setModal] = useState(false);
@@ -13,7 +14,6 @@ const index = () => {
     page: 1,
     limit: 10,
   });
-
   useEffect(() => {
     getData(params);
   }, [params, getData]);

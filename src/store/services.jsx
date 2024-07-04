@@ -9,6 +9,7 @@ const useServiceStore = create((set) => ({
       set({ isLoading: true });
       const response = await services.get_services(params);
       console.log(response);
+      
       if (response.status === 200) {
         set({ data: response?.data?.services });
       }

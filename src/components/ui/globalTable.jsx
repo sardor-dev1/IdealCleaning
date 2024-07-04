@@ -13,7 +13,7 @@ import {
   import del from "../../assets/delete-icon.svg";
   import edit from "../../assets/edit-icon.svg";
   import { useSearchParams } from "react-router-dom";
-  
+
   const GlobalTable = ({ headers, body, isLoading, editItem, deleteItem }) => {
     const [searchParams] = useSearchParams()
     const page = Number(searchParams.get('page')) || 1

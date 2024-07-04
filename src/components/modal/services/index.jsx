@@ -2,8 +2,6 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
-// import { Field, Formik } from "formik";
-// import { Form } from "react-router-dom";
 import { TextField } from "@mui/material";
 import { ErrorMessage, Field, Formik, Form } from "formik";
 import { servicesValidationSchema } from "../../../utils/validation";
@@ -28,6 +26,7 @@ export default function BasicModal({ open, handleClose, item }) {
   const { postData, updateData } = useServiceStore();
   const initialValues = {
     name: item.name || "",
+    
     price: item.price || "",
   };
   const handleSubmit = async (values) => {
