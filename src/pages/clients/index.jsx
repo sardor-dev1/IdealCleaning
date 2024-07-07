@@ -6,7 +6,7 @@ const index = () => {
   const { getClient, client, totalCount, deleteClient } = useClientStore();
   const [params, setParams] = useState({
     page: 1,
-    limit: 10,
+    limit: 4,
   });
   const headers = [
     { title: "№", value: "index" },
