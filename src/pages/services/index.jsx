@@ -5,7 +5,6 @@ import SearchIcon from "@mui/icons-material/Search";
 import Modal from "../../components/modal/services";
 import useServiceStore from "../../store/services";
 import Notification from "../../utils/notification";
-
 const index = () => {
   const { getData, data, isLoading, deleteData } = useServiceStore();
   const [modal, setModal] = useState(false);
@@ -14,6 +13,7 @@ const index = () => {
     page: 1,
     limit: 10,
   });
+
   useEffect(() => {
     getData(params);
   }, [params, getData]);
@@ -26,7 +26,7 @@ const index = () => {
     { title: "№", value: "index" },
     { title: "Service name", value: "name" },
     { title: "Service price", value: "price" },
-    { title: "", value: "action" },
+    { title: "Action", value: "action" },
   ];
   const editItem = (item) => {
     setModal(true);
@@ -53,8 +53,8 @@ const index = () => {
   return (
     <div>
       {modal && <Modal open={modal} handleClose={handleClose} item={item}/>}
-      <div className="py-3 flex justify-between items-center">
-        <div className="w-96">
+      <div className="py-3 flex justify-end items-center">
+        {/* <div className="w-96">
           <Paper
             component="form"
             sx={{
@@ -73,7 +73,7 @@ const index = () => {
               <SearchIcon />
             </IconButton>
           </Paper>
-        </div>
+        </div> */}
         <Button variant="contained" color="primary" onClick={()=>setModal(true)}>
         Add new service
       </Button>

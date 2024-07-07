@@ -2,28 +2,42 @@ import GlobalTable from "../../components/ui/globalTable";
 import { useEffect, useState } from "react";
 import { IconButton, InputBase, Paper } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-// import { BasicModal } from "@modal";
-import useOrderStore from "../../store/order.js";
-import Notification from "@notification";
-
+import { OrderModal, OrderUpdate } from "../../components/modal";
+import useOrderStore from "../../store/orders";
+import Notification from "../../utils/notification";
+// import GlobalPagination from "@pagination";
 const index = () => {
+  const [modal, setModal] = useState(false);
+  const [item, setItem] = useState({});
   const { getOrders, data, isLoading, deleteOrder, totalCount } =
     useOrderStore();
-
   const [params, setParams] = useState({
     page: 1,
     limit: 10,
   });
-
   const deleteItem = async (id) => {
     const response = await deleteOrder(id);
     if (response.status === 200) {
       Notification({
-        title: "Buyurtma muvaffaqiyatli o'chirildi",
+        title: "Order deleted successfully",
         type: "success",
       });
     }
   };
+
+  const editItem = (item) => {
+    setModal(true);
+    setItem(item);
+    console.log(item);
+  }
+
+  const handleClose = () => {
+    setModal(false);
+    setItem({});
+  }
+  const handleOpen = () => {
+    setModal(true);
+  }
 
   useEffect(() => {
     getOrders(params);
@@ -37,28 +51,26 @@ const index = () => {
       page: pageNumber,
     }));
   }, [location.search]);
-
   const changePage = (value) => {
     setParams((prevParams) => ({
       ...prevParams,
       page: value,
     }));
   };
-
   const headers = [
     { title: "№", value: "index" },
-    { title: "Mijoz ismi", value: "client_name" },
-    { title: "Xizmat nomi", value: "service_name" },
-    { title: "Buyurma narxi", value: "price" },
-    { title: "Buyurtma miqdori", value: "amount" },
-    { title: "Buyurtma statusi", value: "status" },
-    { title: "", value: "action" },
+    { title: "Client name", value: "client_name" },
+    { title: "Service name", value: "service_name" },
+    { title: "Order price", value: "price" },
+    { title: "Amount", value: "amount" },
+    { title: "Status", value: "status" },
+    { title: "Action", value: "action" },
   ];
-
   return (
     <div>
-      <div className="py-3 flex justify-between items-center">
-        <div className="w-96">
+      <OrderUpdate open={modal} handleOpen={handleOpen} handleClose={handleClose} item={item}/>
+      <div className="py-3 flex justify-end items-center">
+        {/* <div className="w-96">
           <Paper
             component="form"
             sx={{
@@ -77,16 +89,21 @@ const index = () => {
               <SearchIcon />
             </IconButton>
           </Paper>
-        </div>
-        {/* <BasicModal /> */}
+        </div> */}
+        <OrderModal />
       </div>
       <GlobalTable
         headers={headers}
         body={data}
         isLoading={isLoading}
-        editItem={() => {}}
+        editItem={editItem}
         deleteItem={deleteItem}
       />
+      {/* <GlobalPagination
+        totalCount={totalCount}
+        page={params.page}
+        setParams={changePage}
+      /> */}
     </div>
   );
 };

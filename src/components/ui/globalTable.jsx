@@ -13,8 +13,8 @@ import {
   import del from "../../assets/delete-icon.svg";
   import edit from "../../assets/edit-icon.svg";
   import { useSearchParams } from "react-router-dom";
-
-  const GlobalTable = ({ headers, body, isLoading, editItem, deleteItem }) => {
+  
+  const GlobalTable = ({ headers, body, isLoading, editItem, deleteItem, noneEdit }) => {
     const [searchParams] = useSearchParams()
     const page = Number(searchParams.get('page')) || 1
     const limit = Number(searchParams.get('limit')) || 10
@@ -67,12 +67,15 @@ import {
                                     alt="delate"
                                     onClick={() => deleteItem(item.id)}
                                   />
-                                  <img
+                                  {noneEdit == true? (
+                                    <img
                                     className="border border-gray-300 p-[9px] rounded-md active:bg-gray-300 duration-150 bg-gray-200 cursor-pointer"
                                     src={edit}
                                     alt="edit"
                                     onClick={() => editItem(item)}
                                   />
+                                  ) : null}
+                                
                                 </div>
                               ) : item[header.value] ? (
                                 item[header.value]

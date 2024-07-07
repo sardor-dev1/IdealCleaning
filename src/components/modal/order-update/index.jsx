@@ -5,11 +5,12 @@ import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import { TextField } from "@mui/material";
-import useOrderStore from "../../../store/order";
+import useOrderStore from "../../../store/orders";
 import getServise from "../../../store/services";
-import Notification from "@notification";
-import { ordersValidationSchema } from "../../../utils/validation";
+import Notification from "../../../utils/notification";
+import { ordersUpdateValidationSchema } from "../../../utils/validation";
 import MenuItem from "@mui/material/MenuItem";
+import getClients from "../../../store/clients"
 
 const style = {
   position: "absolute",
@@ -23,48 +24,49 @@ const style = {
   boxShadow: 24,
   p: 3,
 };
-n;
 
-export default function BasicModal() {
-  const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
-  const { postOrder } = useOrderStore();
+export default function BasicModal({open, handleClose, item, handleOpen}) {
+//   const [open, setOpen] = React.useState(false);
+//   const handleOpen = () => setOpen(true);
+//   const handleClose = () => setOpen(false);
+  const { updateOrder } = useOrderStore();
   const { getData, data } = getServise();
+  const {client, getClient} = getClients();
   const [params] = React.useState({
     page: 1,
     limit: 10,
   });
-
   const initialValues = {
-    amount: "",
-    client_phone_number: "",
-    client_full_name: "",
-    service_id: "",
+    amount: item.amount,
+    client_id: item.client_id,
+    service_id: item.service_id,
   };
-  const postData = async (values) => {
-    const status = await postOrder(values);
-    if (status === 201) {
+  const updateData = async (values) => {
+    const payload = {
+        ...values,
+        id: item.id,
+        status: item.status,
+    }
+    const status = await updateOrder(payload);
+    if (status === 200) {
       handleClose();
       Notification({
-        title: "Buyurtma muvaffaqiyatli qo'shildi",
+        title: "Order updated successfully",
         type: "success",
       });
     } else {
-      Notification({ title: "Xatolik yuz berdi", type: "error" });
+      Notification({ title: "Error", type: "error" });
     }
   };
-  const getService = async () => {
-    await getData(params);
-  };
-
+  React.useEffect(()=>{
+    getData(params);
+  }, [handleOpen])
+  React.useEffect(() => {
+      getClient(params)
+    },[])
+    console.log(client)
   return (
     <div>
-      <div onClick={getService}>
-        <Button variant="contained" onClick={handleOpen}>
-          Buyurtma qo'shish
-        </Button>
-      </div>
       <Modal
         open={open}
         onClose={handleClose}
@@ -78,50 +80,41 @@ export default function BasicModal() {
             variant="h6"
             component="h2"
           >
-            Buyurtma qo'shish
+            Order Update
           </Typography>
           <Formik
             initialValues={initialValues}
-            validationSchema={ordersValidationSchema}
-            onSubmit={postData}
+            validationSchema={ordersUpdateValidationSchema}
+            onSubmit={updateData}
           >
             <Form>
               <Field
-                name="client_full_name"
+                name="client_id"
+                select
                 type="text"
                 as={TextField}
-                label="Mijozning to'liq ismi"
+                label="Client Full Name"
                 fullWidth
                 margin="normal"
                 variant="outlined"
                 helperText={
                   <ErrorMessage
-                    name="client_full_name"
+                    name="client_id"
                     component="span"
                     className="text-[red] text-[15px]"
                   />
                 }
-              />
-              <Field
-                name="client_phone_number"
-                type="text"
-                as={TextField}
-                label="Mirozning telefon raqami"
-                fullWidth
-                margin="normal"
-                variant="outlined"
-                helperText={
-                  <ErrorMessage
-                    name="client_phone_number"
-                    component="span"
-                    className="text-[red] text-[15px]"
-                  />
-                }
-              />
+              >
+                {client.map((item, index) => (
+                  <MenuItem key={index} value={item.id}>
+                    {item.full_name}
+                  </MenuItem>
+                ))}
+              </Field>
               <Field
                 name="service_id"
                 select
-                label="Xizmatni tanlang"
+                label="Select Service"
                 as={TextField}
                 fullWidth
                 margin="normal"
@@ -144,7 +137,7 @@ export default function BasicModal() {
                 name="amount"
                 type="number"
                 as={TextField}
-                label="Buyurtma miqdori"
+                label="Order Amount"
                 fullWidth
                 margin="normal"
                 variant="outlined"
@@ -163,7 +156,7 @@ export default function BasicModal() {
                 fullWidth
                 sx={{ mt: 2 }}
               >
-                Qo'shish
+                UPDATE
               </Button>
             </Form>
           </Formik>

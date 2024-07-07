@@ -100,7 +100,7 @@ function ResponsiveDrawer(props) {
           </IconButton>
           <ListItem sx={{ justifyContent: "space-between" }}>
             <Typography variant="h6" noWrap component="div">
-              Ideal Cleaning
+              Responsive drawer
             </Typography>
             <LogOutModal />
           </ListItem>
